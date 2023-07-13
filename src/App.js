@@ -12,8 +12,8 @@ function App() {
   return (
     <div>
       <FormGroup className='component-container' >
-        <Dropdown items={req} id='default' initialSelectedItem={req[0]}  className='dropdown' />
-        <TextInput  placeholder={lnk} className='text-input' />
+        <Dropdown items={req} label='dp' id='default' initialSelectedItem={req[0]}  className='dropdown' />
+        <TextInput  id= 'url' placeholder={lnk} className='text-input' />
         <Button type='submit' className='button' size='md'>Run</Button>
       </FormGroup>
       <div className = 'tab-container'>
