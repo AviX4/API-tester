@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, FormGroup, TextInput } from '@carbon/react';
-function Query_param(){
+function Query_param({paramTransfer}){
     const [params,setParams]= useState([{ id: 1, value1: '', value2: '' }]);
     const handleAddRow = () => {
         const newRow = {
@@ -13,7 +13,7 @@ function Query_param(){
     const handleDelete = (id) => {
         const updatedRows = params.filter((row) => row.id !== id);
         setParams(updatedRows);
-        
+        paramTransfer(updatedRows);
     };
     const handleChange = (id, field, value) => {
         const updatedRows = params.map((row) => {
@@ -23,8 +23,8 @@ function Query_param(){
           return row;
         });
         setParams(updatedRows);
+        paramTransfer(updatedRows);
     };
-
 
     return(
         <div className='query-params'>
@@ -33,15 +33,19 @@ function Query_param(){
                         <TextInput  
                             id = {`v1-${val[1].id}`} 
                             onChange={(e) => handleChange(val[1].id, 'value1', e.target.value)}
+                            placeholder="Key"
                         />
                         <TextInput
                             id = {`v2-${val.id}`}
                             onChange={(e)=> handleChange(val[1].id,'value2',e.target.value)}
+                            placeholder="Value"
                         />
                         <Button onClick={()=> handleDelete(val[1].id)} kind="danger--tertiary" size='md'>DELETE</Button>
                     </FormGroup>
                 ))}
-            <Button className='add-param' onClick={()=> handleAddRow()} kind="secondary">ADD</Button>
+            <div className="add-button">
+                <Button className='add-param' onClick={()=> handleAddRow()} kind="secondary">ADD</Button>
+            </div>
         </div>
     )
 }
