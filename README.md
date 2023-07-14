@@ -7,8 +7,6 @@ The API Testing Web App is a powerful tool designed to streamline and simplify t
 [![Live App](https://img.shields.io/badge/live_demo-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://avix4.github.io/api_tester/)
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aviralsingh525)
 
-![App Screenshot](https://drive.google.com/file/d/1osduakxAUA-mzDB32ZIxiMHeXKcuX8e_/view?usp=sharing)
-
 
 ## Deployment
 
