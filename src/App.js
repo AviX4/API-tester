@@ -14,6 +14,12 @@ function App() {
   const [headers,setHeaders]= useState({});
   const [response,setResponse]= useState({'data':{},'headers':{}});
   const [fetchInitiated,setFetchInitiated] = useState(false);
+  const [jsonInput,setJsonInput] = useState('');
+
+  const handleJSONchange = (e) => {
+    setJsonInput(e.target.value);
+  }
+
 
   const handlecolor =(value)=>{
     let c = 'yellow';
@@ -62,22 +68,27 @@ function App() {
     // e.config.timeData.disp = new Date().getTime()- e.config.timeData.startTime;
     return e.response;
   });
- 
   const handleRun=()=>{
     setFetchInitiated(true);
     setResponse({'data':{},'headers':{}});
-    
+    let data;
+    try{
+      data = JSON.parse(jsonInput || null)
+    }catch(e){
+      alert("JSON isn't valid");
+      return;
+    }
     axios({
       url: lnk,
       method:met,
       params:params,
       headers:headers,
+      data,
     }).catch(e=>e).then(response=>{
       setResponse(response);
       setFetchInitiated(false);
     })
   }
-
   function renderHeaderTable(headerTable){
     return(
       <div className='table'>
@@ -112,7 +123,7 @@ function App() {
           <TabPanels>
             <TabPanel><Query_param paramTransfer={paramTransfer}/></TabPanel>
             <TabPanel><Header headerTransfer={headerTransfer}/></TabPanel>
-            <TabPanel><editor/></TabPanel>
+            <TabPanel><TextInput onChange={(e)=>handleJSONchange(e)}/></TabPanel>
           </TabPanels>
         </Tabs>
       </div>
@@ -132,7 +143,7 @@ function App() {
                     <Tab>Header</Tab>
                   </TabList>
                   <TabPanels>
-                    <TabPanel><div className='disp_json'><CodeSnippet type='multi'>{JSON.stringify(response.data)}</CodeSnippet></div></TabPanel>
+                    <TabPanel><div className='disp_json'><CodeSnippet type='multi'>{JSON.stringify(response.data,null,2)}</CodeSnippet></div></TabPanel>
                     <TabPanel >{response.header!=={} ? renderHeaderTable(response.headers):''}</TabPanel>
                   </TabPanels>
                 </Tabs> 
