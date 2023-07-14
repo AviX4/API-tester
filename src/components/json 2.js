@@ -1,3 +1,0 @@
-function Json_render(){
-    
-}
