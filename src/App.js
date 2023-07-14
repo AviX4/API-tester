@@ -15,6 +15,28 @@ function App() {
   const [response,setResponse]= useState({'data':{},'headers':{}});
   const [fetchInitiated,setFetchInitiated] = useState(false);
 
+  const handlecolor =(value)=>{
+    let c = 'yellow';
+    switch (true) {
+      case value >= 100 && value <= 199:
+        c='yellow';
+        break;
+      case value >= 200 && value <= 299:
+        c='green';
+        break;
+      case value >= 300 && value <= 399:
+        c='blue';
+        break;
+      case value >= 400 && value <= 499:
+        c='red';
+        break;
+      default:
+        c='black';
+    }
+    return (
+      {'background-color':c}
+    )
+  }
   const paramTransfer=(data)=>{
     const map = new Map();
     data.map((d)=> map.set(d.value1,d.value2));
@@ -102,6 +124,7 @@ function App() {
               <div className='xi'>
               <div className='xo'>Status : {response.status}</div><div className='xo'>Size : {prettyBytes(JSON.stringify(response.data).length+JSON.stringify(response.headers).length)}</div><div className='xo'>Time : {response.config.timeData.disp} ms</div>
               </div>
+              <div className='bar' style={handlecolor(response.status)}/>
               <div className='response-block' style={{'padding':'10px'}}>
                 <Tabs>
                   <TabList>
