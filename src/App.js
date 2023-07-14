@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './app.scss';
-import { Tabs , Tab, Button ,InlineLoading, FormGroup, Dropdown, TextInput, TabList, TabPanels, TabPanel, Table, TableCell, TableBody, TableRow} from '@carbon/react';
+import { Tabs, CodeSnippet , Tab, Button ,InlineLoading, FormGroup, Dropdown, TextInput, TabList, TabPanels, TabPanel, Table, TableCell, TableBody, TableRow} from '@carbon/react';
 import Header from './components/headers';
 import Query_param from './components/query_params';
 import axios from 'axios';
-
+import prettyBytes from 'pretty-bytes';
 
 function App() {
   const req = ['GET','PUT','POST','PATCH','DELETE'];
@@ -35,11 +35,12 @@ function App() {
   axios.interceptors.response.use(req=>{
     req.config.timeData.disp = new Date().getTime()- req.config.timeData.startTime;
     return req;
-  },function(e){
+  },function(e){ 
+    console.log(e);
+    // e.config.timeData.disp = new Date().getTime()- e.config.timeData.startTime;
     return e.response;
   });
  
-
   const handleRun=()=>{
     setFetchInitiated(true);
     setResponse({'data':{},'headers':{}});
@@ -89,7 +90,7 @@ function App() {
           <TabPanels>
             <TabPanel><Query_param paramTransfer={paramTransfer}/></TabPanel>
             <TabPanel><Header headerTransfer={headerTransfer}/></TabPanel>
-            <TabPanel>{response.status}</TabPanel>
+            <TabPanel><editor/></TabPanel>
           </TabPanels>
         </Tabs>
       </div>
@@ -99,7 +100,7 @@ function App() {
             <div className='response'>
               <h2>Response</h2>
               <div className='xi'>
-              <div className='xo'>Status : {response.status}</div><div className='xo'>Size : {}</div><div className='xo'>Time : {response.config.timeData.disp} ms</div>
+              <div className='xo'>Status : {response.status}</div><div className='xo'>Size : {prettyBytes(JSON.stringify(response.data).length+JSON.stringify(response.headers).length)}</div><div className='xo'>Time : {response.config.timeData.disp} ms</div>
               </div>
               <div className='response-block' style={{'padding':'10px'}}>
                 <Tabs>
@@ -108,7 +109,7 @@ function App() {
                     <Tab>Header</Tab>
                   </TabList>
                   <TabPanels>
-                    <TabPanel>JSON editor</TabPanel>
+                    <TabPanel><div className='disp_json'><CodeSnippet type='multi'>{JSON.stringify(response.data)}</CodeSnippet></div></TabPanel>
                     <TabPanel >{response.header!=={} ? renderHeaderTable(response.headers):''}</TabPanel>
                   </TabPanels>
                 </Tabs> 

@@ -77,6 +77,10 @@
         display: flex;
         align-self: center;
     }
+    .disp_json{
+        overflow-y: auto;
+        max-width: 50%;
+    }
 
 .loading{
     padding:0 150px;
