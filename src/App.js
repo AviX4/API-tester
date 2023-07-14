@@ -14,6 +14,7 @@ function App() {
   const [headers,setHeaders]= useState({});
   const [response,setResponse]= useState({'data':{},'headers':{}});
   const [fetchInitiated,setFetchInitiated] = useState(false);
+
   const paramTransfer=(data)=>{
     const map = new Map();
     data.map((d)=> map.set(d.value1,d.value2));
@@ -24,6 +25,20 @@ function App() {
     data.map((d)=> map.set(d.value1,d.value2));
     setHeaders(map);
   }
+  axios.interceptors.request.use(req=>{
+    req.timeData = {};
+    req.timeData.startTime = new Date().getTime();
+
+    return req;
+  });
+
+  axios.interceptors.response.use(req=>{
+    req.config.timeData.disp = new Date().getTime()- req.config.timeData.startTime;
+    return req;
+  },function(e){
+    return e.response;
+  });
+ 
 
   const handleRun=()=>{
     setFetchInitiated(true);
@@ -34,13 +49,12 @@ function App() {
       method:met,
       params:params,
       headers:headers,
-    }).catch(e => e).then(response=>{
-      console.log(response);
+    }).catch(e=>e).then(response=>{
       setResponse(response);
       setFetchInitiated(false);
     })
-    
   }
+
   function renderHeaderTable(headerTable){
     return(
       <div className='table'>
@@ -63,7 +77,7 @@ function App() {
       <FormGroup className='component-container' >
         <Dropdown items={req} label='dp' id='default' initialSelectedItem={req[0]}  className='dropdown' onChange={(e)=>setMet(e.selectedItem)} />
         <TextInput  id= 'url' placeholder='https://' className='text-input' onChange={(e) => setLnk(e.target.value)}/>
-        <Button type='submit' className='button' size='md' onClick={()=>handleRun()}>Run</Button>
+        <Button type='submit' className='button' size='md' onClick={()=>handleRun()} disabled={fetchInitiated}>Run</Button>
       </FormGroup>
       <div className = 'tab-container'>
         <Tabs >
@@ -75,17 +89,17 @@ function App() {
           <TabPanels>
             <TabPanel><Query_param paramTransfer={paramTransfer}/></TabPanel>
             <TabPanel><Header headerTransfer={headerTransfer}/></TabPanel>
-            <TabPanel>{met},{lnk}</TabPanel>
+            <TabPanel>{response.status}</TabPanel>
           </TabPanels>
         </Tabs>
       </div>
       
-        {
+        { 
           response.status ? (
             <div className='response'>
               <h2>Response</h2>
               <div className='xi'>
-              <div className='xo'>Status : {response.status}</div><div className='xo'>Size : {}</div><div className='xo'>Time : {}</div>
+              <div className='xo'>Status : {response.status}</div><div className='xo'>Size : {}</div><div className='xo'>Time : {response.config.timeData.disp} ms</div>
               </div>
               <div className='response-block' style={{'padding':'10px'}}>
                 <Tabs>
